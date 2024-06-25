@@ -11,8 +11,8 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 40px);
-  grid-template-rows: repeat(8, 40px);
+  grid-template-columns: repeat(8, 40px); /* 8 columns */
+  grid-template-rows: repeat(8, 40px); /* 8 rows */
   gap: 2px;
 }
 
@@ -21,14 +21,19 @@ body {
   height: 40px;
   background-color: #ffffff;
   border: 1px solid #000000;
+  cursor: pointer;
 }
 
 .cell.hit {
-  background-color: #ff0000;
+  background-color: #ff0000; /* Red for hits */
 }
 
 .cell.miss {
-  background-color: #0000ff;
+  background-color: #0000ff; /* Blue for misses */
+}
+
+.cell.selected {
+  background-color: #00ff00; /* Green for selected cells */
 }
 
 button {
@@ -40,4 +45,10 @@ button {
 #result {
   margin-top: 20px;
   font-size: 18px;
+}
+
+#output {
+  margin-top: 20px;
+  width: 80%;
+  font-size: 16px;
 }

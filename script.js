@@ -1,18 +1,20 @@
-// const data = [
-//   // The first 10 cases from the dataset, converted to JavaScript format
-//   // Replace the following with actual data from the CSV file
-//   {
-//     board: [
-//       // Example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//       // attack_x: 3, attack_y: 4
-//     ],
-//   },
-//   // Add 9 more cases here
-// ];
-
 let currentCaseIndex = 0;
+let attackPosition = null;
+let boardData = [];
 
-function renderBoard(board, attackX, attackY) {
+// Fetch the CSV data
+fetch("high_quality_boards.csv")
+  .then((response) => response.text())
+  .then((text) => {
+    const rows = text.trim().split("\n").slice(1); // Skip header row
+    boardData = rows.map((row) => row.split(",").map((cell) => cell.trim()));
+    showNextCase(); // Automatically show the first case once data is loaded
+  })
+  .catch((error) => {
+    console.error("Error fetching the CSV file:", error);
+  });
+
+function renderBoard(board) {
   const container = document.getElementById("board-container");
   container.innerHTML = "";
 
@@ -26,32 +28,47 @@ function renderBoard(board, attackX, attackY) {
     const x = Math.floor(index / 8);
     const y = index % 8;
 
-    if (cell === 1) {
+    if (cell === "S") {
       cellElement.classList.add("hit");
-    } else if (x === attackX && y === attackY) {
-      cellElement.classList.add("miss");
     }
+
+    cellElement.addEventListener("click", () => {
+      if (attackPosition) {
+        attackPosition.element.classList.remove("miss");
+      }
+      attackPosition = { x, y, element: cellElement };
+      cellElement.classList.add("miss");
+    });
 
     grid.appendChild(cellElement);
   });
 }
 
 function showNextCase() {
-  if (currentCaseIndex >= data.length) {
+  if (currentCaseIndex >= boardData.length) {
     document.getElementById("result").innerText = "No more cases!";
     return;
   }
 
-  const caseData = data[currentCaseIndex];
-  renderBoard(caseData.board, caseData.attack_x, caseData.attack_y);
+  const caseData = boardData[currentCaseIndex];
+  renderBoard(caseData);
 
-  document.getElementById("result").innerText = `Case ${
-    currentCaseIndex + 1
-  }: Attack at (${caseData.attack_x}, ${caseData.attack_y})`;
+  document.getElementById("result").innerText = `Case ${currentCaseIndex + 1}`;
   currentCaseIndex++;
+  attackPosition = null;
+}
+
+function saveRecommendation() {
+  if (attackPosition) {
+    const output = document.getElementById("output");
+    const recommendation = `Case ${currentCaseIndex}: Attack at (${attackPosition.x}, ${attackPosition.y})\n`;
+    output.value += recommendation;
+  } else {
+    alert("Please select an attack position before saving.");
+  }
 }
 
 document.getElementById("next-case").addEventListener("click", showNextCase);
-
-// Show the first case initially
-showNextCase();
+document
+  .getElementById("save-recommendation")
+  .addEventListener("click", saveRecommendation);

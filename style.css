@@ -21,6 +21,7 @@ body {
   height: 40px;
   background-color: #ffffff;
   border: 1px solid #000000;
+  cursor: pointer;
 }
 
 .cell.hit {
@@ -40,4 +41,10 @@ button {
 #result {
   margin-top: 20px;
   font-size: 18px;
+}
+
+#output {
+  margin-top: 20px;
+  width: 80%;
+  font-size: 16px;
 }

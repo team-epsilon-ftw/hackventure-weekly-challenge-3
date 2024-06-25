@@ -2,7 +2,7 @@ import csv
 import json
 
 # Read data from CSV
-csv_file_path = 'battleship_data.csv'
+csv_file_path = 'modified_battleship_data.csv'
 data = []
 with open(csv_file_path, mode='r') as file:
     reader = csv.DictReader(file)
@@ -10,7 +10,8 @@ with open(csv_file_path, mode='r') as file:
         board = [int(row[f'cell_{i}']) for i in range(64)]
         attack_x = int(row['attack_x'])
         attack_y = int(row['attack_y'])
-        data.append({'board': board, 'attack_x': attack_x, 'attack_y': attack_y})
+        data.append(
+            {'board': board, 'attack_x': attack_x, 'attack_y': attack_y})
 
 # Get the first 10 cases
 data = data[:100]

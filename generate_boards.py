@@ -10,6 +10,7 @@ SHIPS = {
 }
 NUM_MISSES = 10  # Number of random misses to generate on each board
 
+
 def generate_board():
     board = [['' for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
     for ship, size in SHIPS.items():
@@ -30,17 +31,23 @@ def generate_board():
                     for i in range(size):
                         board[row + i][col] = 'S'
                     placed = True
-    
+
     # Generate random misses
-    misses = 0
+    misses = 3
     while misses < NUM_MISSES:
         row = random.randint(0, BOARD_SIZE - 1)
         col = random.randint(0, BOARD_SIZE - 1)
         if board[row][col] == '':
             board[row][col] = 'M'
             misses += 1
-    
+
+    for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+            if board[row][col] == 'S':
+                if random.random() < 0.4:  # 40% probability
+                    board[row][col] = ''  # Replace 'S' with an empty string
     return board
+
 
 def save_boards_to_csv(filename, num_boards):
     with open(filename, 'w', newline='') as csvfile:
@@ -52,5 +59,6 @@ def save_boards_to_csv(filename, num_boards):
             for row in board:
                 writer.writerow(row)
 
+
 # Generate 100 random boards and save to CSV
-save_boards_to_csv('high_quality_boards.csv', 100)
+save_boards_to_csv('high_quality_boards.csv', 200)
